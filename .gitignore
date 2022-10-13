@@ -56,3 +56,14 @@ force-app/main/default/lwc/.eslintrc.json
 manifest/package.xml
 scripts/apex/hello.apex
 scripts/soql/account.soql
+/.idea/.gitignore
+/.idea/runConfigurations/All_Tests.xml
+/force-app/main/default/classes/BatchForTest.cls-meta.xml
+/.idea/illuminatedCloud.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/IlluminatedCloud/Tep/OfflineSymbolTable.zip
+/IlluminatedCloud/TeplomasterPDP_Idea/OfflineSymbolTable.zip
+/.idea/runConfigurations.xml
+/TeplomasterPDP_Idea.iml
+/.idea/vcs.xml
