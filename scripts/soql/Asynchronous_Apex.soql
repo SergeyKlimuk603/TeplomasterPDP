@@ -1,0 +1,8 @@
+SELECT Id, NumberField__c, Name, TextField__c, CheckboxField__c, IsLastUpdateSuccessful__c
+FROM TestObject__c
+WHERE CheckboxField__c = TRUE
+ORDER BY NumberField__c
+
+SELECT Id, NumberField__c, Name, TextField__c, CheckboxField__c, IsLastUpdateSuccessful__c
+FROM TestObject__c
+ORDER BY NumberField__c

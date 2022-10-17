@@ -17,10 +17,10 @@ public with sharing class TestObjectUpdateEventTriggerHandler extends TriggerHan
             testObjectsForUpdate.add(
                     new TestObject__c(
                             Id = testObjectUpdateEvent.TestObjectId__c,
-                            IsLastUpdateSuccessful__c = testObjectUpdateEvent.IsSuccessfulUpdate__c,
-                            TextField__c = '00000000000000000000000000000000000000000000000000000000000000000000000000000' +
-                                    '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
-                                    '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+                            IsLastUpdateSuccessful__c = testObjectUpdateEvent.IsSuccessfulUpdate__c
+//                            TextField__c = '00000000000000000000000000000000000000000000000000000000000000000000000000000' +
+//                                    '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
+//                                    '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
                     )
             );
         }

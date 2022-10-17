@@ -1,8 +1,4 @@
-/**
- * Created by user on 9/30/22.
- */
-
-public with sharing class Batch_UpdateTestObjects implements Database.Batchable<SObject>, Schedulable, Database.Stateful{
+public with sharing class Batch_UpdateTestObjects implements Database.Batchable<sObject>, Schedulable, Database.Stateful{
 
     private final Integer START_NEW_BATCH_PERIOD = 5;
 
@@ -12,19 +8,16 @@ public with sharing class Batch_UpdateTestObjects implements Database.Batchable<
 
     private Integer numOfSuccessfulRecords = 0;
 
-    //Constructors
     public Batch_UpdateTestObjects() {}
 
     public Batch_UpdateTestObjects(String query) {
         this.query = query;
     }
 
-    //Schedulable
     public void execute(SchedulableContext schedulableContext) {
         Database.executeBatch(new Batch_UpdateTestObjects(query));
     }
 
-    //Batchable
     public Database.QueryLocator start(Database.BatchableContext batchableContext) {
         Database.QueryLocator queryLocator = Database.getQueryLocator(query);
 
@@ -50,12 +43,11 @@ public with sharing class Batch_UpdateTestObjects implements Database.Batchable<
 
         System.scheduleBatch(
                 new Batch_UpdateTestObjects(query),
-                Batch_UpdateTestObjects.class.getName(),
+                Batch_UpdateTestObjects.class.getName() + '_repeat',
                 START_NEW_BATCH_PERIOD
         );
     }
 
-    //Others
     private List<TestObject__c> handleTestObjects(List<TestObject__c> testObjects) {
         for (TestObject__c testObject : testObjects) {
             testObject.CheckboxField__c = false;
