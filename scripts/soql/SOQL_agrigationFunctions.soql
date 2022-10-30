@@ -1,4 +1,6 @@
+
 SELECT Id, Name, NumberField__c FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%'
 
-SELECT COUNT(Id), Name FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%' GROUP BY Name
+//Возвращает объекты AggregateResult. Количество возвращенных записей равно колчеству различных вариантов поля Name
+SELECT COUNT(Id), COUNT(NumberField__c) numOfRecords, COUNT(Id) Ids, Name FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%' GROUP BY Name
 
