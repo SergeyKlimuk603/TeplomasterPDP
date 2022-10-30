@@ -1,0 +1,4 @@
+SELECT Id, Name, NumberField__c FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%'
+
+SELECT COUNT(Id), Name FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%' GROUP BY Name
+
