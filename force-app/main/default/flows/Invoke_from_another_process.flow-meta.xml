@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <description>Предназначен для проверки запуска флоу из других процессов.</description>
+    <environments>Default</environments>
+    <interviewLabel>invoke from another process {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Invoke from another process</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_TestObject</name>
+        <label>Create TestObject</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>Flow was invoked</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>TextField__c</field>
+            <value>
+                <elementReference>SomeVariable</elementReference>
+            </value>
+        </inputAssignments>
+        <object>TestObject__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Create_TestObject</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>SomeVariable</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>
