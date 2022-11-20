@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Answer 1 - 5</label>
+    <protected>false</protected>
+    <values>
+        <field>AnswerOrder__c</field>
+        <value xsi:type="xsd:double">5.0</value>
+    </values>
+    <values>
+        <field>AnswerText_RU__c</field>
+        <value xsi:type="xsd:string">Ответ 1 - 5 (переход к вопросу 3)</value>
+    </values>
+    <values>
+        <field>AnswerText__c</field>
+        <value xsi:type="xsd:string">Answer 1 - 5  (go to Question 3)</value>
+    </values>
+    <values>
+        <field>NextQuestion__c</field>
+        <value xsi:type="xsd:string">Question_3</value>
+    </values>
+    <values>
+        <field>Question__c</field>
+        <value xsi:type="xsd:string">Question_1</value>
+    </values>
+</CustomMetadata>

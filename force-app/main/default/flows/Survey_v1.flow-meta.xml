@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <decisions>
+        <description>Проверяет есть ли следующий вопрос. Если получено пустое значение, опрос считается завершенным.</description>
+        <name>Have_next_Question</name>
+        <label>Have next Question?</label>
+        <locationX>176</locationX>
+        <locationY>398</locationY>
+        <defaultConnectorLabel>Don&apos;t have</defaultConnectorLabel>
+        <rules>
+            <name>Have</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>currentQuestionId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Current_Question</targetReference>
+            </connector>
+            <label>Have</label>
+        </rules>
+    </decisions>
+    <description>Опросник созданный в рамках PDP. Различные его версии содержат различные вариации flow.
+v1
+Самый простой вариант, позволяет перемещаться по различным вопросам.
+Недостатки:
+- в качестве входных данных используеся Id вопроса, лучше для этого использовать DeveloperName. В следующей версии постараюсь исправить этот недостаток.</description>
+    <dynamicChoiceSets>
+        <description>Варианты ответов для текущего вопроса</description>
+        <name>AnswerVariants</name>
+        <dataType>String</dataType>
+        <displayField>AnswerText__c</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Question__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Current_Question.Id</elementReference>
+            </value>
+        </filters>
+        <object>AnswerVariant__mdt</object>
+        <outputAssignments>
+            <assignToReference>selectedAnswerId</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>currentQuestionId</assignToReference>
+            <field>NextQuestion__c</field>
+        </outputAssignments>
+        <valueField>AnswerText__c</valueField>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>Survey v1 {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Survey v1</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordLookups>
+        <description>Текущий вопрос опросника</description>
+        <name>Current_Question</name>
+        <label>Current Question</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Survey_Question</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>currentQuestionId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Question__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>QuestionText__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <description>Задаваемый вопрос с вариантами ответа</description>
+        <name>Survey_Question</name>
+        <label>Survey Question</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Have_next_Question</targetReference>
+        </connector>
+        <fields>
+            <name>AnswerVariants_Picklist</name>
+            <choiceReferences>AnswerVariants</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>{!Current_Question.QuestionText__c}</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Current_Question</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>currentQuestionId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>m035g000000zewv</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>selectedAnswerId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

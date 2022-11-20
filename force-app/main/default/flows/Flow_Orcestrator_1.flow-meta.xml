@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <environments>Default</environments>
+    <interviewLabel>Flow Orcestrator 1 {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Flow Orcestrator 1</label>
+    <orchestratedStages>
+        <name>Stage_1</name>
+        <label>Stage 1</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Step_1</name>
+            <actionName>Flow_Orcestrator_1_Step_1</actionName>
+            <actionType>stepInteractive</actionType>
+            <assignees>
+                <assignee>
+                    <stringValue>sergey_klimuk@mail.ru</stringValue>
+                </assignee>
+                <assigneeType>User</assigneeType>
+            </assignees>
+            <entryConditionLogic>and</entryConditionLogic>
+            <inputParameters>
+                <name>ActionInput__RecordId</name>
+                <value>
+                    <elementReference>currentRecordId</elementReference>
+                </value>
+            </inputParameters>
+            <label>Step 1</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+        </stageSteps>
+        <stageSteps>
+            <name>Step_2</name>
+            <actionName>Flow_Orcestrator_1_Step_2</actionName>
+            <actionType>stepBackground</actionType>
+            <entryConditionLogic>and</entryConditionLogic>
+            <entryConditions>
+                <leftValueReference>Step_1.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Completed</stringValue>
+                </rightValue>
+            </entryConditions>
+            <label>Step 2</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+        </stageSteps>
+    </orchestratedStages>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Orchestrator</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Stage_1</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>currentRecordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>a025g00000BPDGOAA5</stringValue>
+        </value>
+    </variables>
+</Flow>

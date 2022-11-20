@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <name>Set_next_Question_and_current_AnswerVersion</name>
+        <label>Set next Question and current AnswerVersion</label>
+        <locationX>270</locationX>
+        <locationY>1094</locationY>
+        <assignmentItems>
+            <assignToReference>currentQuestionName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_data_from_selected_AnswerVariant.NextQuestion__r.DeveloperName</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>selectedAnswer</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_data_from_selected_AnswerVariant</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_data_from_selected_AnswerVariant</targetReference>
+        </connector>
+    </assignments>
+    <collectionProcessors>
+        <description>Получаем объект выбранного варианта ответа</description>
+        <name>Selected_AnswerVariant</name>
+        <elementSubtype>FilterCollectionProcessor</elementSubtype>
+        <label>Selected AnswerVariant</label>
+        <locationX>182</locationX>
+        <locationY>854</locationY>
+        <assignNextValueToReference>currentItem_Selected_AnswerVariant</assignNextValueToReference>
+        <collectionProcessorType>FilterCollectionProcessor</collectionProcessorType>
+        <collectionReference>Current_AnswerVariants</collectionReference>
+        <conditionLogic>formula_evaluates_to_true</conditionLogic>
+        <connector>
+            <targetReference>Get_data_from_selected_AnswerVariant</targetReference>
+        </connector>
+        <formula>OR(
+   AND(
+        NOT(ISBLANK({!currentItem_Selected_AnswerVariant.AnswerText__c})),
+        {!currentItem_Selected_AnswerVariant.AnswerText__c} = {!AnswerVariants}
+    ),
+   AND(
+        NOT(ISBLANK({!currentItem_Selected_AnswerVariant.AnswerText_RU__c})),
+        {!currentItem_Selected_AnswerVariant.AnswerText_RU__c} = {!AnswerVariants_RU}
+    )
+)</formula>
+    </collectionProcessors>
+    <decisions>
+        <description>На каком языке показывать клиенту опрос?</description>
+        <name>Contact_landuage</name>
+        <label>Contact landuage</label>
+        <locationX>182</locationX>
+        <locationY>518</locationY>
+        <defaultConnector>
+            <targetReference>Survey_Question</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Russian</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Contact.Languages__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Russian</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Russian_Survey_Question</targetReference>
+            </connector>
+            <label>Russian</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Проверяет есть ли следующий вопрос. Если получено пустое значение, опрос считается завершенным.</description>
+        <name>Have_next_Question</name>
+        <label>Have next Question?</label>
+        <locationX>182</locationX>
+        <locationY>1310</locationY>
+        <defaultConnectorLabel>Don&apos;t have</defaultConnectorLabel>
+        <rules>
+            <name>Have</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>currentQuestionName</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Current_Question</targetReference>
+            </connector>
+            <label>Have</label>
+        </rules>
+    </decisions>
+    <description>Опросник созданный в рамках PDP. Различные его версии содержат различные вариации flow.
+v1
+Самый простой вариант, позволяет перемещаться по различным вопросам.
+Недостатки:
+- в качестве входных данных используеся Id вопроса, лучше для этого использовать DeveloperName. В следующей версии постараюсь исправить этот недостаток.
+
+v2
+Теперь в качестве входных параметров можно передавать DeveloperName вопроса. Так удобнее.
+
+v3
+Реализована работа с разными языками (для клиентов из разных стран) в зависимости от значения поля Contact.Languages</description>
+    <dynamicChoiceSets>
+        <description>Варианты ответов на текущий вопрос.</description>
+        <name>AnswerVariants</name>
+        <collectionReference>Current_AnswerVariants</collectionReference>
+        <dataType>String</dataType>
+        <displayField>AnswerText__c</displayField>
+        <object>AnswerVariant__mdt</object>
+        <valueField>AnswerText__c</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <description>Варианты ответов на русском языке</description>
+        <name>AnswerVariants_RU</name>
+        <collectionReference>Current_AnswerVariants</collectionReference>
+        <dataType>String</dataType>
+        <displayField>AnswerText_RU__c</displayField>
+        <object>AnswerVariant__mdt</object>
+        <valueField>AnswerText_RU__c</valueField>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>Survey v3 {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Survey v3</label>
+    <loops>
+        <description>Получаем значения из выбранного варианта ответа</description>
+        <name>Get_data_from_selected_AnswerVariant</name>
+        <label>Get data from selected AnswerVariant</label>
+        <locationX>182</locationX>
+        <locationY>974</locationY>
+        <collectionReference>Selected_AnswerVariant</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Set_next_Question_and_current_AnswerVersion</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Have_next_Question</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordLookups>
+        <description>Клиент, для которого проводится опрос.</description>
+        <name>Contact</name>
+        <label>Contact</label>
+        <locationX>182</locationX>
+        <locationY>158</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Current_Question</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>contactId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Languages__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Варианты ответов для текущего вопроса.</description>
+        <name>Current_AnswerVariants</name>
+        <label>Current AnswerVariants</label>
+        <locationX>182</locationX>
+        <locationY>398</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Contact_landuage</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Question__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Current_Question.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>AnswerVariant__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>AnswerText__c</queriedFields>
+        <queriedFields>NextQuestion__c</queriedFields>
+        <queriedFields>AnswerText_RU__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Текущий вопрос опросника</description>
+        <name>Current_Question</name>
+        <label>Current Question</label>
+        <locationX>182</locationX>
+        <locationY>278</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Current_AnswerVariants</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>currentQuestionName</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Question__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>QuestionText__c</queriedFields>
+        <queriedFields>QuestionText_Ru__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <description>Задаваемый вопрос с вариантами ответа на русском языке</description>
+        <name>Russian_Survey_Question</name>
+        <label>Russian Survey Question</label>
+        <locationX>50</locationX>
+        <locationY>638</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Selected_AnswerVariant</targetReference>
+        </connector>
+        <fields>
+            <name>Russian_AnswerVariants_Picklist</name>
+            <choiceReferences>AnswerVariants_RU</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>{!Current_Question.QuestionText_Ru__c}</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Задаваемый вопрос с вариантами ответа</description>
+        <name>Survey_Question</name>
+        <label>Survey Question</label>
+        <locationX>314</locationX>
+        <locationY>638</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Selected_AnswerVariant</targetReference>
+        </connector>
+        <fields>
+            <name>AnswerVariants_Picklist</name>
+            <choiceReferences>AnswerVariants</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>{!Current_Question.QuestionText__c}</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Contact</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <description>Id клиента, для которого проводится опрос</description>
+        <name>contactId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>0035g00000nhwIMAAY</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>currentItem_Selected_AnswerVariant</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>AnswerVariant__mdt</objectType>
+    </variables>
+    <variables>
+        <name>currentQuestionName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Question_1</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Выбранный вариант ответа</description>
+        <name>selectedAnswer</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>AnswerVariant__mdt</objectType>
+    </variables>
+</Flow>

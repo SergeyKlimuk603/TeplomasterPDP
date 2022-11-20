@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Start_Question__c</fullName>
+    <description>Вопрос, с которого начинается опросник.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Start Question</label>
+    <referenceTo>Question__mdt</referenceTo>
+    <relationshipLabel>SurveyTemplates</relationshipLabel>
+    <relationshipName>SurveyTemplates</relationshipName>
+    <required>true</required>
+    <type>MetadataRelationship</type>
+    <unique>true</unique>
+</CustomField>

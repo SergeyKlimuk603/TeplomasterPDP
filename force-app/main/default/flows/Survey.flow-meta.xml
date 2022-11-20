@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <name>English_questionText</name>
+        <label>English questionText</label>
+        <locationX>314</locationX>
+        <locationY>878</locationY>
+        <assignmentItems>
+            <assignToReference>questionText</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Current_Question.QuestionText__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Survey_record_exists</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Устанавливаем Id певого вопроса опросника</description>
+        <name>First_QuestionId</name>
+        <label>First QuestionId</label>
+        <locationX>182</locationX>
+        <locationY>398</locationY>
+        <assignmentItems>
+            <assignToReference>nextQuestionId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>SurveyTemplate.Start_Question__r.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Current_Question</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Russian_questionText</name>
+        <label>Russian questionText</label>
+        <locationX>50</locationX>
+        <locationY>878</locationY>
+        <assignmentItems>
+            <assignToReference>questionText</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Current_Question.QuestionText_Ru__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Survey_record_exists</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>На каком языке показывать клиенту опрос?</description>
+        <name>Contact_landuage</name>
+        <label>Contact landuage</label>
+        <locationX>182</locationX>
+        <locationY>638</locationY>
+        <defaultConnector>
+            <targetReference>English_Survey_Question</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>English (default)</defaultConnectorLabel>
+        <rules>
+            <name>Russian</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Contact.Languages__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Russian</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Russian_Survey_Question</targetReference>
+            </connector>
+            <label>Russian</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Проверяет есть ли следующий вопрос. Если получено пустое значение, опрос считается завершенным.</description>
+        <name>Have_next_Question</name>
+        <label>Have next Question?</label>
+        <locationX>182</locationX>
+        <locationY>1550</locationY>
+        <defaultConnector>
+            <targetReference>Complete_Survey</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Don&apos;t have</defaultConnectorLabel>
+        <rules>
+            <name>Have</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>nextQuestionId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Current_Question</targetReference>
+            </connector>
+            <label>Have</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Была ли уже создана запись Survey (проверка нужна, чтобы не создавать запись Survey если клиент не ответил ни на один вопрос).</description>
+        <name>Survey_record_exists</name>
+        <label>Survey record exists?</label>
+        <locationX>182</locationX>
+        <locationY>1094</locationY>
+        <defaultConnector>
+            <targetReference>Create_Survey</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Survey_exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Create_Survey</leftValueReference>
+                <operator>NotEqualTo</operator>
+            </conditions>
+            <connector>
+                <targetReference>Create_SurveyItem</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Опросник созданный в рамках PDP. Различные его версии содержат различные вариации flow.
+v1
+Самый простой вариант, позволяет перемещаться по различным вопросам.
+Недостатки:
+- в качестве входных данных используеся Id вопроса, лучше для этого использовать DeveloperName. В следующей версии постараюсь исправить этот недостаток.
+
+v2
+Теперь в качестве входных параметров можно передавать DeveloperName вопроса. Так удобнее.
+
+v3
+Реализована работа с разными языками (для клиентов из разных стран) в зависимости от значения поля Contact.Languages
+
+v4
+Добавлено сохранение результата опроса.
+
+v5
+Добавлена сортировка вариантов ответа и шаблон опросника.
+
+v6
+Улучшен флоу путем изменения формирования списка вариантов ответа, убраны излишние элементы предыдущей версии.
+
+v7
+Версия для дальнейших экспериментов.
+
+v8.
+Попытался создать ссылку на Custom Metedata Type.</description>
+    <dynamicChoiceSets>
+        <description>Варианты ответов на данный вопрос</description>
+        <name>AnswerVariants</name>
+        <dataType>Number</dataType>
+        <displayField>AnswerText__c</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Question__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Current_Question.Id</elementReference>
+            </value>
+        </filters>
+        <object>AnswerVariant__mdt</object>
+        <outputAssignments>
+            <assignToReference>selectedAnswerText</assignToReference>
+            <field>AnswerText__c</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>selectedAnswerDeveloperName</assignToReference>
+            <field>DeveloperName</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>nextQuestionId</assignToReference>
+            <field>NextQuestion__c</field>
+        </outputAssignments>
+        <sortField>AnswerOrder__c</sortField>
+        <sortOrder>Asc</sortOrder>
+        <valueField>AnswerOrder__c</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>AnswerVariants_RU</name>
+        <dataType>Number</dataType>
+        <displayField>AnswerText_RU__c</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Question__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Current_Question.Id</elementReference>
+            </value>
+        </filters>
+        <object>AnswerVariant__mdt</object>
+        <outputAssignments>
+            <assignToReference>selectedAnswerText</assignToReference>
+            <field>AnswerText_RU__c</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>selectedAnswerDeveloperName</assignToReference>
+            <field>DeveloperName</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>nextQuestionId</assignToReference>
+            <field>NextQuestion__c</field>
+        </outputAssignments>
+        <sortField>AnswerOrder__c</sortField>
+        <sortOrder>Asc</sortOrder>
+        <valueField>AnswerOrder__c</valueField>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <formulas>
+        <name>SurveyItem_Name</name>
+        <dataType>String</dataType>
+        <expression>{!Current_Question.DeveloperName} + &apos;; &apos; +  {!selectedAnswerDeveloperName}</expression>
+    </formulas>
+    <formulas>
+        <description>Содержит основные данные проведенного опроса.</description>
+        <name>surveyName</name>
+        <dataType>String</dataType>
+        <expression>{!surveyTemplateName} + &apos;; &apos; + {!Contact.Name} + &apos;; &apos; + TEXT(TODAY())</expression>
+    </formulas>
+    <interviewLabel>Survey {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Survey</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <description>Создаем запись Survey, если она еще не была создана</description>
+        <name>Create_Survey</name>
+        <label>Create Survey</label>
+        <locationX>270</locationX>
+        <locationY>1214</locationY>
+        <connector>
+            <targetReference>Create_SurveyItem</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Contact__c</field>
+            <value>
+                <elementReference>contactId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>surveyName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>SurveyTemplateName__c</field>
+            <value>
+                <elementReference>SurveyTemplate.DeveloperName</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Survey__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Создаем запись хранящую текст вопроса и выбранный вариант ответа на него.</description>
+        <name>Create_SurveyItem</name>
+        <label>Create SurveyItem</label>
+        <locationX>182</locationX>
+        <locationY>1430</locationY>
+        <connector>
+            <targetReference>Have_next_Question</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Answer__c</field>
+            <value>
+                <elementReference>selectedAnswerText</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>SurveyItem_Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>QuestionId__c</field>
+            <value>
+                <elementReference>Current_Question.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Question__c</field>
+            <value>
+                <elementReference>questionText</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Survey__c</field>
+            <value>
+                <elementReference>Create_Survey</elementReference>
+            </value>
+        </inputAssignments>
+        <object>SurveyItem__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <description>Клиент, для которого проводится опрос.</description>
+        <name>Contact</name>
+        <label>Contact</label>
+        <locationX>182</locationX>
+        <locationY>158</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>SurveyTemplate</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>contactId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Languages__c</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Текущий вопрос опросника</description>
+        <name>Current_Question</name>
+        <label>Current Question</label>
+        <locationX>182</locationX>
+        <locationY>518</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Contact_landuage</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>nextQuestionId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Question__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>QuestionText__c</queriedFields>
+        <queriedFields>QuestionText_Ru__c</queriedFields>
+        <queriedFields>DeveloperName</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Шаблон опрсника, содержащий основную информацию опроса. Например, с какого именно вопроса начинается опрос. Также может содержать дополнительные сведения: приветственное сообщение, например.</description>
+        <name>SurveyTemplate</name>
+        <label>SurveyTemplate</label>
+        <locationX>182</locationX>
+        <locationY>278</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>First_QuestionId</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>surveyTemplateName</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>SurveyTemplate__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Start_Question__c</queriedFields>
+        <queriedFields>DeveloperName</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Complete_Survey</name>
+        <label>Complete Survey</label>
+        <locationX>314</locationX>
+        <locationY>1670</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Create_Survey</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>IsComplete__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>Survey__c</object>
+    </recordUpdates>
+    <screens>
+        <description>Задаваемый вопрос с вариантами ответа</description>
+        <name>English_Survey_Question</name>
+        <label>English Survey Question</label>
+        <locationX>314</locationX>
+        <locationY>758</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>English_questionText</targetReference>
+        </connector>
+        <fields>
+            <name>AnswerVariants_Picklist</name>
+            <choiceReferences>AnswerVariants</choiceReferences>
+            <dataType>Number</dataType>
+            <fieldText>{!Current_Question.QuestionText__c}</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+            <scale>0</scale>
+        </fields>
+        <fields>
+            <name>currentContactLink</name>
+            <fieldText>&lt;p&gt;&lt;a href=&quot;/{!Contact.Id}&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;{!Contact.Name}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;/{!contactId}&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;Current Contact&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;/{!Current_Question.Id}&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;Question&lt;/a&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Задаваемый вопрос с вариантами ответа на русском языке</description>
+        <name>Russian_Survey_Question</name>
+        <label>Russian Survey Question</label>
+        <locationX>50</locationX>
+        <locationY>758</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Russian_questionText</targetReference>
+        </connector>
+        <fields>
+            <name>Russian_AnswerVariants_Picklist</name>
+            <choiceReferences>AnswerVariants_RU</choiceReferences>
+            <dataType>Number</dataType>
+            <fieldText>{!Current_Question.QuestionText_Ru__c}</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
+            <scale>0</scale>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Contact</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <description>Id клиента, для которого проводится опрос</description>
+        <name>contactId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>0035g00000nhwIMAAY</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Id следующего вопроса. Нельзя получить DeveloperName в Record Chose Set.</description>
+        <name>nextQuestionId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Текст выбранного вопроса. Хранит вопрос на языке клиента.</description>
+        <name>questionText</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>selectedAnswerDeveloperName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Текст выбранного вопроса</description>
+        <name>selectedAnswerText</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Переменная хранящая результат опроса</description>
+        <name>Survey</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Survey__c</objectType>
+    </variables>
+    <variables>
+        <description>Имя шаблона опросника, чтобы понимать какой именно опрос мы проводим. Полученный шаблон содержит данные о первом вопросе в опроснике.</description>
+        <name>surveyTemplateName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Test_SurveyTemplate</stringValue>
+        </value>
+    </variables>
+</Flow>

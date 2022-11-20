@@ -1,0 +1,2 @@
+SELECT TestObjectParent__r.Id, TestObjectParent__r.Name, TestObjectParent__r.TextField__c, Name, TextField__c
+FROM TestObject__c
