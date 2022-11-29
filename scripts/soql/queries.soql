@@ -1,0 +1,9 @@
+SELECT Id, Name, TextField__c, IsDeleted FROM TestObjectParent__c WHERE Name LIKE 'SOQL optimization%' OR TextField__c = 'text field'
+
+SELECT Id, Name FROM TestObjectParent__c WHERE Name LIKE 'SOQL optimization%'
+
+
+
+
+SELECT Id FROM TestObjectParent__c
+
