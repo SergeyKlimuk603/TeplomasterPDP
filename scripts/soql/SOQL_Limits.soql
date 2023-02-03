@@ -1,0 +1,9 @@
+SELECT Id FROM TestObject__c
+
+SELECT Id FROM TestObjectParent__c
+
+SELECT Id FROM TestObject__c WHERE Name LIKE 'ResearchSOQL%'
+
+SELECT Id FROM TestObjectParent__c WHERE Name LIKE 'ResearchSOQL%'
+
+SELECT Id, (SELECT Id FROM TestObjects__r) FROM TestObjectParent__c
