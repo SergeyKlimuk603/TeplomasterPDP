@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <description>Flow предназначен для тестирования внедрения в Visualforce Pages, Aura, LWC, других Flow и т.д.</description>
+    <environments>Default</environments>
+    <interviewLabel>For including to other components {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>For including to other components</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <description>Показывает значения переменных текущего Flow</description>
+        <name>Show_variables</name>
+        <label>Show variables</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Available_for_input_and_output_Variables</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: var(--lwc-fontSize5,1rem);&quot;&gt;TextVariable: {! TextVariable }&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Show_variables</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>TextVariable</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue>none</stringValue>
+        </value>
+    </variables>
+</Flow>

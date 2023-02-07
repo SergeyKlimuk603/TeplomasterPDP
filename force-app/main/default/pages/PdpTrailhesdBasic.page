@@ -1,0 +1,220 @@
+<apex:page standardController="TestObject__c">
+<!--<apex:page standardController="TestObject__c" renderAs="PDF">-->
+<!-- Source: https://trailhead.salesforce.com/content/learn/modules/visualforce_fundamentals -->
+<br/>1-----------------------------------------------------------------------------------------------<br/>
+    <apex:form >
+        
+            <apex:pageMessages />  <!-- Display Form Errors and Messages -->
+                    
+            <apex:inputField value="{!TestObject__c.Name}"/>
+            <apex:inputField value="{!TestObject__c.TextField__c}"/>
+            <apex:inputField value="{!TestObject__c.DateTimeField__c}"/>
+            <apex:inputField value="{!TestObject__c.NumberField__c}"/>
+            <apex:inputField value="{!TestObject__c.TestObjectParent__c}"/>                         
+        
+            <apex:commandButton action="{!save}" value="Save"/>                                   
+                                  
+    </apex:form>
+    
+    <apex:form >
+        <apex:pageBlock title="Edit TestObject__c">
+        
+            <apex:pageMessages />  <!-- Display Form Errors and Messages -->
+        
+            <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!TestObject__c.Name}"/>
+                <apex:inputField value="{!TestObject__c.TextField__c}"/>
+                <apex:inputField value="{!TestObject__c.DateTimeField__c}"/>
+                <apex:inputField value="{!TestObject__c.NumberField__c}"/>
+                <apex:inputField value="{!TestObject__c.TestObjectParent__c}"/>                
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlockButtons> 
+            
+            <!--Parent record getting-->
+            <br/>
+            Parent record name:  {!TestObject__c.TestObjectParent__r.Name}
+            <br/><br/>
+            
+            <!--Child records getting-->
+            <apex:pageBlockTable value="{!TestObject__c.TestObjectChilds__r}" var="child">
+                <apex:column >
+                    <!--Edit Related Records-->
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.Edit, child.Id) }">
+                        Edit
+                    </apex:outputLink>
+                    &nbsp;
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.Delete, child.Id) }">
+                        Del
+                    </apex:outputLink>
+                    &nbsp;
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.View, child.Id) }">
+                        View
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Name">
+                    {!child.Name}
+                </apex:column>
+                <apex:column headerValue="TextField">
+                    {!child.TextField__c}
+                </apex:column>
+                <apex:column headerValue="NumberField">
+                    {!child.NumberField__c}
+                </apex:column>
+            </apex:pageBlockTable>
+                      
+        </apex:pageBlock>
+    </apex:form>
+       
+<br/>2-----------------------------------------------------------------------------------------------<br/>
+       
+    <apex:pageBlock title="A Block Title">
+        <apex:pageBlockSection title="A Section Title">
+            I'm three components deep!
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="A New Section">
+            This is another section.
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+<br/>3-----------------------------------------------------------------------------------------------<br/>
+    
+    <!-- Variables and formulas -->
+        <p>TestObject name: {!TestObject__c.Name}</p>
+        <p>TestObject name: {!TestObject__c.DateTimeField__c}</p>
+        <p>TestObject full information: {!TestObject__c.Name + ' ' & TestObject__c.TextField__c                 + ' all spaces ignored'}</p>
+        
+        <p> Today's Date is {! TODAY() } </p>
+        <p> Next week it will be {! TODAY() + 7 } </p>
+        <p>The year today is {! YEAR(TODAY()) }</p>
+        <p>Tomorrow will be day number  {! DAY(TODAY() + 1) }</p>
+        <p>Let's find a maximum: {! MAX(1,2,3,4,5,6,5,4,3,2,1) } </p>
+        <p>The square root of 49 is {! SQRT(49) }</p>
+        <p>Is it true?  {! CONTAINS('salesforce.com', 'force.com') }</p>
+        
+        <!-- Global variables -->
+            <p>User names: {! $User.FirstName + ' ' + $User.LastName + ' ' + $User.UserName }</p>
+            <p>Profile name: {! $Profile.Name }</p>
+            
+            <!--Link to another page with Global variables -->
+                <apex:outputLink value="{!$Page.PdpTrailhesdBasicAdditional}">
+                    <apex:param name="Id" value="a025g00000DMhaeAAD"/>
+                    This is a link to PdpTrailhesdBasicAdditional page with recordId: a025g00000DMhaeAAD.
+                </apex:outputLink>
+        
+        <!-- Conditional Expressions -->
+            <p>{! IF( CONTAINS('salesforce.com','force.com'),'Yep', 'Nope') }</p>
+            <p>{! IF( DAY(TODAY()) < 15,'Before the 15th', 'The 15th or after') }</p>
+            
+            <apex:pageBlock title="User Status">
+                <apex:pageBlockSection columns="1">
+                    {! $User.FirstName & ' ' & $User.LastName }
+                   ({! $User.Username })
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+            
+<br/>4-----------------------------------------------------------------------------------------------<br/>
+            
+    <!-- Use Standard Controllers -->    
+        <apex:pageBlock title="Account Summary">
+        <apex:pageBlockSection >
+            Name: {! TestObject__c.Name } <br/>
+            TextField: {! TestObject__c.TextField__c } <br/>
+            DateTimeField: {! TestObject__c.DateTimeField__c } <br/>
+            TestObjectParent Name: {! TestObject__c.TestObjectParent__r.Name } <br/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+        
+<br/>5-----------------------------------------------------------------------------------------------<br/>
+        
+    <!-- Display Record Details -->  
+        <apex:detail />    
+        
+<br/>6-----------------------------------------------------------------------------------------------<br/>  
+
+    <!-- Display Related Lists -->
+        <apex:detail relatedList="false"/> <!-- Without Related Lists -->
+        <apex:relatedList list="TestObjectChilds__r" pageSize="5"/>
+        
+
+<br/>7-----------------------------------------------------------------------------------------------<br/>
+    <!-- Display Individual Fields -->
+        <apex:pageBlock title="Edit TestObject__c">
+            <apex:pageBlockSection >
+                <apex:outputField value="{!TestObject__c.Name}"/>
+                <apex:outputField value="{!TestObject__c.TextField__c}"/>
+                <apex:outputField value="{!TestObject__c.DateTimeField__c}"/>
+                <apex:outputField value="{!TestObject__c.NumberField__c}"/>
+                <apex:outputField value="{!TestObject__c.TestObjectParent__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <!-- Without apex:pageBlock -->
+        <apex:outputField value="{!TestObject__c.Name}"/>
+        <apex:outputField value="{!TestObject__c.TextField__c}"/>
+        <apex:outputField value="{!TestObject__c.DateTimeField__c}"/>
+        <apex:outputField value="{!TestObject__c.NumberField__c}"/>
+        <apex:outputField value="{!TestObject__c.TestObjectParent__c}"/>
+        <br/>
+
+<br/>8-----------------------------------------------------------------------------------------------<br/>
+    <!-- Display A Table -->
+        <apex:pageBlock title="TestObjectChilds">
+            <apex:pageBlockTable value="{! TestObject__c.TestObjectChilds__r }" var="child">
+                <apex:column >
+                    <!--Edit Related Records-->
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.Edit, child.Id) }">
+                        Edit
+                    </apex:outputLink>
+                    &nbsp;
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.Delete, child.Id) }">
+                        Del
+                    </apex:outputLink>
+                    &nbsp;
+                    <apex:outputLink value="{! URLFOR($Action.TestObjectChild__c.View, child.Id) }">
+                        View
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column value="{!child.Name}"/>
+                <apex:column value="{!child.TextField__c}"/>
+                <apex:column value="{!child.NumberField__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+
+<br/>9-----------------------------------------------------------------------------------------------<br/>
+    <!-- Display Form Errors and Messages -->
+        <apex:pageMessages />
+        
+<br/>10-----------------------------------------------------------------------------------------------<br/>
+    
+    <hr/>
+    
+<br/>11-----------------------------------------------------------------------------------------------<br/>
+
+    <!-- Getting parameters from URL -->
+    <!-- https://teplomaster-dev-ed--c.vf.force.com/apex/PdpTrailhesdBasic?id=a025g00000DMSdUAAX&someParameter=1234567890 -->
+    
+    Id: {!$CurrentPage.parameters.Id}
+    <br/>
+    someParameter: {!$CurrentPage.parameters.someParameter}
+
+<br/>12-----------------------------------------------------------------------------------------------<br/>
+
+<br/>13-----------------------------------------------------------------------------------------------<br/>
+
+<br/>14-----------------------------------------------------------------------------------------------<br/>
+
+<br/>15-----------------------------------------------------------------------------------------------<br/>
+
+
+
+
+
+
+
+
+     
+       
+</apex:page>

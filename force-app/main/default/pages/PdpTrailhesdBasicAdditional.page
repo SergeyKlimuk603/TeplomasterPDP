@@ -1,0 +1,10 @@
+<apex:page standardController="TestObject__c">
+    <p>This is new Visualforce Page</p>
+    <p>TestObject Id: {! TestObject__c.Id}</p>
+    
+    <!--Link to another page with Global variables -->
+        <apex:outputLink value="{!$Page.PdpTrailhesdBasic}">
+            <apex:param name="Id" value="a025g00000DMhaeAAD"/>
+            This is a link to PdpTrailhesdBasicAdditional page with recordId: a025g00000DMhaeAAD.
+        </apex:outputLink>
+</apex:page>

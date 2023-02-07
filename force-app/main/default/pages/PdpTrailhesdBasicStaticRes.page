@@ -1,0 +1,42 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false">
+<!-- Use Static Resources -->
+    <!-- jQuery Link: http://jquery.com/download/ -->
+    <!--  Put jQuery in Static Resources -->
+    
+    <!-- Add the static resource to page's <head> -->
+    <apex:includeScript value="{! $Resource.jQuery }"/>
+    <!-- A short bit of jQuery to test it's there -->
+    <script type="text/javascript">
+        jQuery.noConflict();
+        jQuery(document).ready(function() {
+            jQuery("#message").html("Hello from jQuery!");
+        });
+    </script>
+    <!-- Where the jQuery message will appear -->
+    <h1 id="message"></h1>
+    
+    <!-- jQueryMobile zip Link: https://jquerymobile.com/download/ -->
+    <!--  Put jQueryMobile in Static Resources -->
+    
+    <!-- Add static resources to page's <head> -->
+    <apex:stylesheet value="{! URLFOR($Resource.jQueryMobile,'jquery.mobile-1.4.5.css')}"/>
+    <apex:includeScript value="{! $Resource.jQueryMobile }"/>
+    <apex:includeScript value="{! URLFOR($Resource.jQueryMobile,'jquery.mobile-1.4.5.js')}"/>
+    <div style="margin-left: auto; margin-right: auto; width: 50%">
+        <!-- Display images directly referenced in a static resource -->
+        <h1>Images</h1>
+        <h3>Images</h3>
+        <p>A hidden message:
+            <apex:image alt="eye" title="eye" url="{!URLFOR($Resource.jQueryMobile, 'images/icons-png/eye-black.png')}"/>
+            <apex:image alt="heart" title="heart" url="{!URLFOR($Resource.jQueryMobile, 'images/icons-png/heart-black.png')}"/>
+            <apex:image alt="cloud" title="cloud" url="{!URLFOR($Resource.jQueryMobile, 'images/icons-png/cloud-black.png')}"/>
+        </p>
+        
+        <!-- Display images referenced by CSS styles, all from a static resource. -->
+        <h3>Background Images on Buttons</h3>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-action">action</button>
+        <button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-star">star</button>
+        
+        <apex:image alt="eye" title="eye" value="{! $Resource.FastTransfer_logo }"/>
+    </div>
+</apex:page>

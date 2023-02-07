@@ -1,0 +1,34 @@
+<apex:page >
+
+    <!-- Add Visualforce Component https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_comp_cust.htm-->
+  <c:ForAddingToOtherComponent someValue="Some value" textColor="red"/>
+    <c:ForAddingToOtherComponent someValue="Some value 1" textColor="blue"/>
+    
+    <!-- Add Aura https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/components_visualforce.htm -->
+    
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+        $Lightning.use("c:ForIncludingToOther", function() {
+          $Lightning.createComponent("lightning:button",
+              { label : "Press Me!" },
+              "lightning",
+              function(cmp) {
+                console.log("button was created");
+                // do some stuff
+              }
+          );
+        });
+    </script>
+    
+    <!-- Add LWC https://developer.salesforce.com/docs/component-library/documentation/en/lwc/use_visualforce -->
+    
+    <!-- Add Flow https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_flows_adding.htm -->
+    <flow:interview name="For_including_to_other_components" finishLocation="{!URLFOR('/home/home.jsp')}">
+        <apex:param name="TextVariable" value="Some text for Flow"/>
+    </flow:interview>
+    
+    
+</apex:page>
