@@ -1,0 +1,22 @@
+<apex:page controller="MyCustomVPController" extensions="MyVisualforceExtention1,MyVisualforceExtention2">
+    TestObject: {! TestObject.Name }
+    <br/>
+    SomeInteger: {! someinteger }
+    <br/>
+    SomeTest: {! someText }
+    <br/>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:commandLink action="{! SomeAction}">Last Name</apex:commandLink>
+            <br/>
+            <apex:pageMessages />  <!-- Display Form Errors and Messages -->
+                        
+                <apex:inputField value="{!TestObject.Name}"/>
+                
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!save}" value="Save"/>
+                </apex:pageBlockButtons>
+            <br/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
