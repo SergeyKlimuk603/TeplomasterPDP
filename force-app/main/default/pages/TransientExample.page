@@ -1,0 +1,9 @@
+<apex:page controller="TransientExampleController">
+<!-- https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_transient.htm -->
+<!-- This page shows the differences between transient and not transient vatiables -->
+  T1: {!t1} <br/>
+  T2: {!t2} <br/>
+  <apex:form >
+    <apex:commandLink value="refresh"/>
+  </apex:form>
+</apex:page>
