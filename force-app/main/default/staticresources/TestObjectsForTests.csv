@@ -1,0 +1,6 @@
+Name,TextField__c,NumberField__c,CheckboxField__c
+For test 1,Text 1,1,FALSE
+For test 2,Text 2,2,FALSE
+For test 3,Text 3,3,TRUE
+For test 4,Text 4,4,TRUE
+For test 5,Text 5,5,TRUE
