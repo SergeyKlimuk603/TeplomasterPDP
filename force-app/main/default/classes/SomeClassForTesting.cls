@@ -19,4 +19,9 @@ public with sharing class SomeClassForTesting {
         return testCmdMap.get(cmtName).TextField__c;
     }
     //----------------------------------------------------------------------------------------------------------
+    //Обработка исключений в тестах https://help.salesforce.com/s/articleView?id=release-notes.rn_apex_new_assert_class.htm&release=240&type=5
+    public void throwException(String message) {
+        //Здесь может быть любой тип Exception
+        throw new IllegalArgumentException(message);
+    }
 }

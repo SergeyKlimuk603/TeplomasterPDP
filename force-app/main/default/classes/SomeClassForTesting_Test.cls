@@ -116,7 +116,7 @@ private class SomeClassForTesting_Test {
         Map<String, TestCMT__mdt> testCmdMap = new Map<String, TestCMT__mdt>{
             'Default' => new TestCMT__mdt(DeveloperName = 'Default', Label = 'Default', TextField__c = 'Test default'),
             'testRecord' => new TestCMT__mdt(DeveloperName = 'testRecord', Label = 'testRecord', TextField__c = 'Test')
-        }; 
+        };
 
         SomeClassForTesting instance = new SomeClassForTesting();
 
@@ -125,6 +125,20 @@ private class SomeClassForTesting_Test {
 
         Assert.areEqual('Test default', instance.getTextFromCmt('Default'));
         Assert.areEqual('Test', instance.getTextFromCmt('testRecord'));
+    }
+    //----------------------------------------------------------------------------------------------------------------------------
+    //Обработка исключений в тестах https://help.salesforce.com/s/articleView?id=release-notes.rn_apex_new_assert_class.htm&release=240&type=5
+    @isTest
+    static void exceptionHandlingTest() {
+        SomeClassForTesting instance = new SomeClassForTesting();
+
+        try {
+            instance.throwException('Test exception');
+            Assert.fail('Exception failure is always an option');
+        } catch (Exception ex) {
+            Assert.isInstanceOfType(ex, IllegalArgumentException.class);
+            // Additional assertions
+        }
     }
     //----------------------------------------------------------------------------------------------------------------------------
 }
