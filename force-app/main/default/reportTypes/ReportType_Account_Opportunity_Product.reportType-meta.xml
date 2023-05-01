@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>Account</baseObject>
+    <category>other</category>
+    <deployed>true</deployed>
+    <description>Шаблон отчета для отображения данных о покупках клиента.</description>
+    <join>
+        <join>
+            <outerJoin>true</outerJoin>
+            <relationship>OpportunityLineItems</relationship>
+        </join>
+        <outerJoin>true</outerJoin>
+        <relationship>Opportunities</relationship>
+    </join>
+    <label>ReportType Account Opportunity Product</label>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>Account</displayNameOverride>
+            <field>Name</field>
+            <table>Account</table>
+        </columns>
+        <masterLabel>Accounts</masterLabel>
+    </sections>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>Opportunity</displayNameOverride>
+            <field>Name</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>StageName</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CloseDate</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <masterLabel>Opportunities</masterLabel>
+    </sections>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>Product</displayNameOverride>
+            <field>PricebookEntry.Product2.Name</field>
+            <table>Account.Opportunities.OpportunityLineItems</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Product Quantity</displayNameOverride>
+            <field>Quantity</field>
+            <table>Account.Opportunities.OpportunityLineItems</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Product Sales Price</displayNameOverride>
+            <field>UnitPrice</field>
+            <table>Account.Opportunities.OpportunityLineItems</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Product Total Price</displayNameOverride>
+            <field>TotalPrice</field>
+            <table>Account.Opportunities.OpportunityLineItems</table>
+        </columns>
+        <masterLabel>Products</masterLabel>
+    </sections>
+    <sections>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>SalesOffice</displayNameOverride>
+            <field>SalesOffice__c.Name</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>SalesOffice City</displayNameOverride>
+            <field>SalesOffice__c.City__c</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <masterLabel>SalesOffices</masterLabel>
+    </sections>
+</ReportType>
