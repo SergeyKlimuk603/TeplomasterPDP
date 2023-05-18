@@ -1,1 +1,32 @@
-Здесь должно быть описание выполняемой задачи.
+Результаты выполнения тестов
+
+------------------------------------------------------------------------------------------------------------------------
+                    !                   !            Доступ класса из которого вызывается другой класс                 !
+------------------------------------------------------------------------------------------------------------------------
+                    !                   !      default      !  without sharing  !    with sharing  ! inherited sharing !
+-----------------------------------------------------------------------------------------------------------------------
+ Без вызова другого класса (из тестов)  !   with sharing    !  without sharing  !   with sharing   !   with sharing    !
+--------------------------------------------------------------------------------------------------------------------
+                    !    default        !        -          !  without sharing  !   with sharing   !         -         !
+                    ----------------------------------------------------------------------------------------------------
+ Доступ класса в    ! without sharing   !  without sharing  !         -         !  without sharing !         -         !
+ котором идет       ----------------------------------------------------------------------------------------------------
+ обращение к базе   ! with sharing      !    with sharing   !    with sharing   !         -        !         -         !
+ данных             ----------------------------------------------------------------------------------------------------
+                    ! inherited sharing !    with sharing   !  without sharing  !    with sharing  !         -         !
+------------------------------------------------------------------------------------------------------------------------
+   Запрос из самого теста               !                                with sharing                                  !
+------------------------------------------------------------------------------------------------------------------------
+
+Если в классе не указан доступ (ключенвые слова: inherited sharing, with sharing, without sharing), то класс работает
+как inherited sharing. Однако, в отличие от inherited sharing, если такой класс вызывается первым в транзакции, то он
+работает как without sharing. Если класс с указанием inherited sharing вызывается первым в транзакции, то он будет
+работать как with sharing
+
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_keywords_sharing.htm
+
+There’s a distinct difference between an Apex class that is marked with inherited sharing and one with an omitted
+sharing declaration. If the class is used as the entry point to an Apex transaction, an omitted sharing declaration runs
+as without sharing. However, inherited sharing ensures that the default is to run as with sharing. A class declared as
+inherited sharing runs as without sharing only when explicitly called from an already established without sharing
+context.
