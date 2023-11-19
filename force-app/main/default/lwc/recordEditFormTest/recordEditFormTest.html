@@ -1,0 +1,60 @@
+<template>
+    <div  class="slds-var-m-top_small">
+        <lightning-record-edit-form object-api-name="TestObject__c" 
+                                    record-id={recordId1}
+                                    onsubmit={handleSubmit}
+                                    onsuccess={handleSuccess}
+                                    onerror={handleError}
+                                    >
+        
+        <lightning-messages data-id="errorMessage" style="--slds-c-toast-sizing-min-width : 0"></lightning-messages>
+        
+        <lightning-input-field field-name="Name"></lightning-input-field>
+        <lightning-input-field field-name="NumberField__c"></lightning-input-field>
+        <lightning-input-field field-name="CheckboxField__c"></lightning-input-field>
+        <lightning-input-field field-name="Picklist_1__c"></lightning-input-field>
+        <lightning-input-field field-name="Picklist_2__c"></lightning-input-field>
+        <lightning-input-field field-name="TestObjectParent__c"></lightning-input-field>
+        <lightning-input-field field-name="DateTimeField__c"></lightning-input-field>
+        <lightning-input-field field-name="TextField__c"></lightning-input-field>
+
+        <lightning-button class="slds-m-top_small" type="submit" label={buttonLabel}></lightning-button>
+
+        </lightning-record-edit-form>
+
+        <lightning-button   class="slds-m-top_small" 
+                            label="Create Error" 
+                            variant="destructive" 
+                            onclick={createError}
+                            >
+        </lightning-button>
+    </div>
+    <div  class="slds-var-m-top_small">
+        <lightning-record-edit-form object-api-name="TestObject__c" 
+                                    record-id={recordId1}
+                                    onsubmit={handleSubmit}
+                                    onsuccess={handleSuccess}
+                                    onerror={handleError}
+                                    >
+        <lightning-messages data-id="errorMessage"></lightning-messages>
+        <lightning-input-field field-name="Name"></lightning-input-field>
+        <lightning-input-field field-name="NumberField__c"></lightning-input-field>
+        <lightning-input-field field-name="CheckboxField__c"></lightning-input-field>
+        <lightning-input-field field-name="Picklist_1__c"></lightning-input-field>
+        <lightning-input-field field-name="Picklist_2__c"></lightning-input-field>
+        <lightning-input-field field-name="TestObjectParent__c"></lightning-input-field>
+        <lightning-input-field field-name="DateTimeField__c"></lightning-input-field>
+        <lightning-input-field field-name="TextField__c"></lightning-input-field>
+
+        <lightning-button class="slds-m-top_small" type="submit" label="Create TestObject"></lightning-button>
+
+        </lightning-record-edit-form>
+
+        <lightning-button   class="slds-m-top_small" 
+                            label="Create Error" 
+                            variant="destructive" 
+                            onclick={createError}
+                            >
+        </lightning-button>
+    </div>
+</template>

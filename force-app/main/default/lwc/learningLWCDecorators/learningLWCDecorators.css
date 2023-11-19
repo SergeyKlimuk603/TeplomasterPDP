@@ -1,0 +1,22 @@
+/**
+ * Created by user on 5/25/23.
+ */
+ .spinner{}
+
+.icon-error-color{
+    --slds-c-icon-color-foreground-default: red;
+}
+
+.icon-close-color{
+    --lwc-colorTextIconDefault: white;
+}
+
+.alert{
+    --slds-c-alert-color-border: pink;
+    --slds-c-alert-color-background: pink;
+    --slds-c-alert-text-color: red;
+}
+
+.test {
+    margin:0;
+}
