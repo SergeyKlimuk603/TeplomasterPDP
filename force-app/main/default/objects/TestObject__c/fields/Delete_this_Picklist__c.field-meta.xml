@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delete_this_Picklist__c</fullName>
+    <externalId>false</externalId>
+    <label>Delete this Picklist</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Test_Global_Picklist_Value_Set</valueSetName>
+    </valueSet>
+</CustomField>
