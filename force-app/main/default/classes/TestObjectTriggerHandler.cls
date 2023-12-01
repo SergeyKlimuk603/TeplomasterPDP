@@ -1,9 +1,8 @@
-/**
- * Created by user on 10/19/22.
- */
-
 public with sharing class TestObjectTriggerHandler extends TriggerHandler {
     private static Boolean isActive = true;
+    private static Integer recursionLimit = 3;
+    private static Integer executionCount = 0;
+    private static Integer count = 0;
 
     protected override void afterInsert(Map<Id, SObject> newObjectsMap) {
     }
@@ -13,13 +12,15 @@ public with sharing class TestObjectTriggerHandler extends TriggerHandler {
             return;
         }
 
+        if (executionCount >= recursionLimit) {
+            return;
+        }
+
         List<TestObject__c> newList = newObjectsList;
-        System.debug('-----beforeUpdate');
-        System.debug('-----newList: ' + newList);
+
         for (TestObject__c testObject : newList) {
-            System.debug('-----testObject: ' + testObject);
-            if (testObject.TextField__c.startsWith('TestOrderOfExecution|')) {
-                testObject.TextField__c += ' |buTrigger|';
+            if (testObject.Name == 'TestOrderOfExecution') {
+                testObject.TextAreaField__c += '<p>beforeApdate Trigger' + count + '</p>';
             }
         }
     }
@@ -29,23 +30,27 @@ public with sharing class TestObjectTriggerHandler extends TriggerHandler {
             return;
         }
 
+        if (executionCount >= recursionLimit) {
+            executionCount = 0;
+            return;
+        }
+
         List<TestObject__c> newList = newObjectsList;
 
-        System.debug('-----afterUpdate');
-        System.debug('-----newList: ' + newList);
-
         List<TestObject__c> newSelectedList = [
-            SELECT Id, TextField__c
+            SELECT Id, TextAreaField__c
             FROM TestObject__c
-            WHERE Id IN :newList AND TextField__c LIKE 'TestOrderOfExecution|%'
+            WHERE Id IN :newList AND Name LIKE 'TestOrderOfExecution%'
         ];
 
         for (TestObject__c testObject : newSelectedList) {
-            System.debug('-----testObject: ' + testObject);
-            testObject.TextField__c += ' |auTrigger|';
+            testObject.TextAreaField__c += '<p>afterApdate Trigger' + count + '</p>';
         }
 
-        updateWithoutTrigger(newSelectedList);
+        executionCount++;
+        count++;
+        update newSelectedList;
+        //updateWithoutTrigger(newSelectedList);
     }
 
     private static void updateWithoutTrigger(List<TestObject__c> testObjectsList) {

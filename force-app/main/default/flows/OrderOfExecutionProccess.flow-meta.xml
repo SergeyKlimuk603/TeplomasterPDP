@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>59.0</apiVersion>
+    <apiVersion>58.0</apiVersion>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -41,8 +41,7 @@
                         <stringValue>String</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference
-        >myVariable_current.TextField__c</leftValueReference>
+                <leftValueReference>myVariable_current.Name</leftValueReference>
                 <operator>StartsWith</operator>
                 <rightValue>
                     <stringValue>TestOrderOfExecution</stringValue>
@@ -59,15 +58,15 @@
             <name>originalFormula</name>
             <value>
                 <stringValue
-        >[TestObject__c].TextField__c + &apos; |PB|&apos;</stringValue>
+        >[TestObject__c].TextAreaField__c + &apos;&lt;p&gt;------------------------------ProcessBuilder&lt;/p&gt;&apos;</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_2925821091</name>
+        <name>formula_2_myRule_1_A1_6482778751</name>
         <dataType>String</dataType>
         <expression
-    >{!myVariable_current.TextField__c} + &apos; |PB|&apos;</expression>
+    >{!myVariable_current.TextAreaField__c} + &apos;&lt;p&gt;------------------------------ProcessBuilder&lt;/p&gt;&apos;</expression>
     </formulas>
-    <interviewLabel>OrderOfExecutionProccess-2_InterviewLabel</interviewLabel>
+    <interviewLabel>OrderOfExecutionProccess-5_InterviewLabel</interviewLabel>
     <label>OrderOfExecutionProccess</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -153,7 +152,7 @@
             <processMetadataValues>
                 <name>leftHandSideLabel</name>
                 <value>
-                    <stringValue>TextField</stringValue>
+                    <stringValue>TestObject Name</stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -180,10 +179,10 @@
                     <stringValue>String</stringValue>
                 </value>
             </processMetadataValues>
-            <field>TextField__c</field>
-            <operator>StartsWith</operator>
+            <field>Name</field>
+            <operator>EqualTo</operator>
             <value>
-                <stringValue>TestOrderOfExecution|</stringValue>
+                <stringValue>TestOrderOfExecution</stringValue>
             </value>
         </filters>
         <inputAssignments>
@@ -202,7 +201,7 @@
             <processMetadataValues>
                 <name>leftHandSideLabel</name>
                 <value>
-                    <stringValue>TextField</stringValue>
+                    <stringValue>TextAreaField</stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -217,10 +216,10 @@
                     <stringValue>Formula</stringValue>
                 </value>
             </processMetadataValues>
-            <field>TextField__c</field>
+            <field>TextAreaField__c</field>
             <value>
                 <elementReference
-        >formula_2_myRule_1_A1_2925821091</elementReference>
+        >formula_2_myRule_1_A1_6482778751</elementReference>
             </value>
         </inputAssignments>
         <object>TestObject__c</object>

@@ -3,10 +3,10 @@
     <apiVersion>59.0</apiVersion>
     <environments>Default</environments>
     <formulas>
-        <name>TextFieldAdd</name>
+        <name>TextAreaFieldAdd</name>
         <dataType>String</dataType>
         <expression
-    >{!$Record.TextField__c} + &apos; |acuFlow|&apos;</expression>
+    >{!$Record.TextAreaField__c} + &apos; &lt;p&gt;----------afterUpdateFlow&lt;/p&gt;&apos;</expression>
     </formulas>
     <interviewLabel
   >OrderOfExecutionAfter {!$Flow.CurrentDateTime}</interviewLabel>
@@ -36,9 +36,9 @@
         <locationX>176</locationX>
         <locationY>323</locationY>
         <inputAssignments>
-            <field>TextField__c</field>
+            <field>TextAreaField__c</field>
             <value>
-                <elementReference>TextFieldAdd</elementReference>
+                <elementReference>TextAreaFieldAdd</elementReference>
             </value>
         </inputAssignments>
         <inputReference>$Record</inputReference>
@@ -51,14 +51,14 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>TextField__c</field>
+            <field>Name</field>
             <operator>StartsWith</operator>
             <value>
-                <stringValue>TestOrderOfExecution|</stringValue>
+                <stringValue>TestOrderOfExecution</stringValue>
             </value>
         </filters>
         <object>TestObject__c</object>
-        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <recordTriggerType>Update</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
